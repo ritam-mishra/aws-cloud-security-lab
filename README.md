@@ -19,7 +19,7 @@ Simulated AWS security misconfigurations tested with Prowler &amp; ScoutSuite fo
       - [Step 3: Use Python 3.12 with Poetry (Fix the Version Issue)](#step-3--use-python-312-with-poetry--fix-the-version-issue-)
       - [Step 4: Install Prowler Dependencies](#step-4--install-prowler-dependencies)
     + [2. Prowler Execution](#2-prowler-execution)
-    + [3. Top Misconfigurations (reported by Prowler)](#3-top-misconfigurations--reported-by-prowler-)
+    + [3. Top Misconfigurations (reported by Prowler)](#3-top-misconfigurations-by-prowler)
 
 
 ## Lab Overview
@@ -159,7 +159,7 @@ poetry run prowler aws -p default -M html,json
 
 To open the HTML report I went to the output file that was generated on the prowler directory. I clicked on the ```prowler-output-xxx-xxxx.html``` file and it successfully opened my report. 
 
-### 3. Top Misconfigurations (reported by Prowler)
+### 3. Top Misconfigurations reported by Prowler
 
 | Status | Severity | Service | Check Title | Resource | Extended Status | Risk | Recommendation | Compliance |
 |--------|----------|---------|-------------|----------|------------------|------|----------------|------------|
@@ -174,4 +174,49 @@ To open the HTML report I went to the output file that was generated on the prow
 | Total Passed | Total Failed |
 |--------------|----------|
 | 130 | 86 |
+
+## ScoutSuite – Setup and Execution
+
+I was eager to check the results provided by another very famous and robust open-source tool **ScoutSuite**.
+
+### 1. ScoutSuite Setup
+
+Setting up the environment for running ScoutSuite was quite simple. I made sure that I am currently running in a virtual environment `venv`. 
+
+#### Step 1: Clone ScoutSuite Repository
+```bash
+git clone https://github.com/nccgroup/ScoutSuite.git
+```
+```
+cd ScoutSuite
+```
+
+#### Step 2: Create Python Virtual Environment
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### Step 3: Install Dependencies 
+```bash
+pip install -r requirements.txt
+```
+
+### 2. ScoutSuite Execution
+
+To verify that my AWS credentials are setup correctly, I ran
+
+``` bash
+ aws sts get-caller-identity
+```
+To run ScoutSuite Against AWS, I ran:
+```bash
+python scout.py aws
+```
+It took some time to analyse my AWS Account and the report was generated under the /reports file in the ScoutSuite Directory. 
+I clicked on the report to view it.
+
+### 3. Top Misconfigurations reported by ScoutSuite
+
+
 
