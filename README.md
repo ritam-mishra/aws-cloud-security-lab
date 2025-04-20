@@ -6,20 +6,30 @@ Simulated AWS security misconfigurations tested with Prowler &amp; ScoutSuite fo
 ![Tools](https://img.shields.io/badge/tools-Prowler%20%7C%20ScoutSuite-green)
 
 ## Table of Contents
-  * [Lab Overview](#lab-overview)
-  * [Lab Setup](#lab-setup)
-    + [1. IAM User Provisioning](#1-iam-user-provisioning)
-    + [2. AWS CLI Configuration](#2-aws-cli-configuration)
-    + [3.Vulnerable Infrastructure Deployment](#3vulnerable-infrastructure-deployment)
-    + [4. Tool Setup & Execution](#4-tool-setup---execution)
-  * [Prowler – Setup and Execution](#prowler---setup-and-execution)
-    + [1. Prowler Setup](#1-prowler-setup)
-      - [Step 1: Install Build Dependencies](#step-1--install-build-dependencies)
-      - [Step 2: Download and Compile Python 3.12](#step-2--download-and-compile-python-312)
-      - [Step 3: Use Python 3.12 with Poetry (Fix the Version Issue)](#step-3--use-python-312-with-poetry--fix-the-version-issue-)
-      - [Step 4: Install Prowler Dependencies](#step-4--install-prowler-dependencies)
-    + [2. Prowler Execution](#2-prowler-execution)
-    + [3. Top Misconfigurations (reported by Prowler)](#3-top-misconfigurations-by-prowler)
+  - [Lab Overview](#lab-overview)
+  - [Lab Setup](#lab-setup)
+    * [1. IAM User Provisioning](#1-iam-user-provisioning)
+    * [2. AWS CLI Configuration](#2-aws-cli-configuration)
+    * [3.Vulnerable Infrastructure Deployment](#3vulnerable-infrastructure-deployment)
+    * [4. Tool Setup & Execution](#4-tool-setup-&-execution)
+  - [Prowler – Setup and Execution](#prowler-–-setup-and-execution)
+    * [1. Prowler Setup](#1-prowler-setup)
+      + [Step 1: Install Build Dependencies](#step-1:-install-build-dependencies)
+      + [Step 2: Download and Compile Python 3.12](#step-2:-download-and-compile-python-312)
+      + [Step 3: Use Python 3.12 with Poetry (Fix the Version Issue)](#step-3:-use-python-312-with-poetry-(fix-the-version-issue))
+      + [Step 4: Install Prowler Dependencies](#step-4:-install-prowler-dependencies)
+    * [2. Prowler Execution](#2-prowler-execution)
+    * [3. Top Misconfigurations reported by Prowler](#3-top-misconfigurations-reported-by-prowler)
+  - [ScoutSuite – Setup and Execution](#scoutsuite-–-setup-and-execution)
+    * [1. ScoutSuite Setup](#1-scoutsuite-setup)
+      + [Step 1: Clone ScoutSuite Repository](#step-1:-clone-scoutsuite-repository)
+      + [Step 2: Create Python Virtual Environment](#step-2:-create-python-virtual-environment)
+      + [Step 3: Install Dependencies](#step-3:-install-dependencies)
+    * [2. ScoutSuite Execution](#2-scoutsuite-execution)
+    * [3. Top Misconfigurations reported by ScoutSuite](#3-top-misconfigurations-reported-by-scoutsuite)
+  - [Verdict](#verdict)
+  - [Interesting Finding](#interesting-finding)
+  - [📌 Final Thoughts](#📌-final-thoughts)
 
 
 ## Lab Overview
@@ -218,5 +228,45 @@ I clicked on the report to view it.
 
 ### 3. Top Misconfigurations reported by ScoutSuite
 
+- **❌ Credentials Unused for 90 Days or Greater Are Not Disabled**  
+  Inactive IAM user credentials pose a security risk if compromised. Best practice recommends disabling or removing access keys that haven’t been used in over 90 days.
 
+- **❌ Lack of Key Rotation for 90 Days (Key Status: Active)**  
+  Active KMS keys that haven’t been rotated in over 90 days weaken cryptographic hygiene. Enabling automatic key rotation helps maintain compliance and reduce risk.
+
+- **❌ Root Account without Hardware MFA**  
+  The AWS root user has unrestricted access. Without MFA—preferably hardware-based—the account is at significant risk of unauthorized access.
+
+- **❌ IAM User Without MFA**  
+  IAM users without Multi-Factor Authentication are vulnerable to credential theft. Enabling MFA adds an additional security layer for AWS console access.
+
+- **❌ EBS Volume Not Encrypted**  
+  Unencrypted Elastic Block Store (EBS) volumes expose stored data at rest. Encryption should be enforced to secure sensitive workloads.
+a
+- **❌ Security Group Opens SSH Port (22) to 0.0.0.0/0**  
+  Allowing global access to SSH is highly insecure. This configuration exposes EC2 instances to brute-force and other network attacks.
+
+- **❌ S3 Bucket Access Logging Disabled**  
+  Without access logging, it’s difficult to trace data access or unauthorized operations. Enabling logging helps with audits and incident response.
+
+- **❌ S3 Bucket Allows Clear Text (HTTP) Communication**  
+  HTTP access to buckets transmits data in plain text. Enforce HTTPS to ensure encrypted communication and prevent data interception.
+
+
+## Verdict
+
+I personally preferred **ScoutSuite** over other tools like Prowler because of its **clean and intuitive UI**, along with **dashboard-style visualizations** that make it easy to interpret the findings. The ability to **filter, sort, and navigate misconfigurations** through a centralized web-based report makes it far more comprehensive and user-friendly for auditing and compliance checks.
+
+## Interesting Finding
+
+While testing, I provided **CLI credentials for only one IAM user**, but ScoutSuite was able to generate findings for **both IAM accounts under the root account**. Even more impressively, it scanned and flagged issues related to the **root account itself**, such as lack of MFA and usage of inactive keys. This deeper insight made the analysis more thorough and unexpected.
+
+
+## 📌 Final Thoughts
+
+This project was aimed at exploring and comparing open-source AWS security auditing tools. ScoutSuite stood out due to its **depth of analysis, ease of navigation, and insightful reporting** capabilities. From setup to report generation, the tool proved to be **smooth, reliable, and beginner-friendly**.
+
+> Thanks for checking out my project! Hope it helps others in securing their AWS environments with better visibility and actionable insights.
+
+---
 
